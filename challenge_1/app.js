@@ -4,79 +4,157 @@
 //use this when figuring out whether to put an X or an O
 var playerXTurn = true;
 
-//create a toggle that changes who's turn it is. Default is player x's turn
-var changeTurn = function() {
-    playerXTurn = !playerXTurn
-    //append a message to the header that says who's turn it is
-    var whoseTurn = document.getElementsByClassName("whoseTurn");
-    console.log(whoseTurn)
-    if (playerXTurn) {
-      whoseTurn.innerText = "It's your turn, player X!";
-    } else {
-      whoseTurn.innerText = "It's your turn, player O!"
-    }
-}
-
 //create a function that creates the board
-var newBoard = function () {
+var newGame = function () {
+  //call create a new board function
+  playerXTurn = true;
+  document.getElementsByClassName("whoseTurn")[0].innerText = "Player X goes first";
   //each cell needs to be clickable
   var cells = document.querySelectorAll("td");
-  cells.forEach(cell => cell.innerText = '|___|')
+  cells.forEach(cell => cell.innerText = '|___|');
   cells.forEach(cell => cell.addEventListener("click", toggleSquare));
+  cells.forEach(cell => cell.style.backgroundColor = "white");
   document.getElementById("newGame").addEventListener("click", newGame);
-}
+};
+
+//========== change turn with a cell is clicked======
+
+//create a toggle that changes who's turn it is. Default is player x's turn
+var changeTurn = function() {
+  playerXTurn = !playerXTurn
+  //append a message to the header that says who's turn it is
+  var whoseTurn = document.getElementsByClassName("whoseTurn");
+  //console.log(whoseTurn[0].innerText)
+  if (playerXTurn) {
+    whoseTurn[0].innerText = "It's your turn, player X!";
+  } else {
+    whoseTurn[0].innerText = "It's your turn, player O!"
+  }
+};
 
 //create a function that is called when a square is clicked
 var toggleSquare = function (cell) {
-
-  console.log('clicked on cell')
-  //cell.innerText('Hello, world')
-  cellid = cell.path[0].id
-  console.log(cellid)
-  // this should:
-  //  a) place either an x or o in that square
+  //cellid = cell.path[0].id
+  //place either an x or o in that square
   if (playerXTurn) {
     cell.path[0].innerText = '|_X_|'
+    //cell.path[0].style.backgroundColor = "green"
   } else {
     cell.path[0].innerText = '|_O_|'
+    //cell.path[0].style.backgroundColor = "blue"
   }
-  //  b) change who's turn it is
-  changeTurn();
-  //  c) check if game is over
-  isGameOver();
-  //  d) refresh the board (and only the board) with the new state
-}
+  //check if game is over
+  if (gameIsOver(cell)) {
+    console.log('game is over')
+  } else {
+    //if game not over, change who's turn it is
+    changeTurn();
+  }
+};
+
+//===========Check for end of game and determine who has won========
 
 //create a function that checks whether a player has won
-var isGameOver = function () {
-  //check if there are three of one type in a row
+var gameIsOver = function (cell) {
+  var header = document.getElementsByTagName("header")[0];
+  var whoseTurn = document.getElementsByClassName("whoseTurn");
   //call hasPlayerWon twice, once with x and once with y
-  if (hasPlayerWon(x)) {
-    var header = document.getElementsByTagName("header");
-    header.innerText = "Player X has won!";
-    return true;  //?? do we want to return anything?
-  } else if (hasPlayerWon(o)) {
-    var header = document.getElementsByTagName("header");
-    header.innerText = "Player O has won!";
-    return true; //?? do we want to return anything?
+  var player = playerXTurn ? 'X' : 'O';
+  if (hasPlayerWon(player, cell)) {
+    header.innerText = `Player ${player} has won!`;
+    whoseTurn[0].innerText = "";
+    return true;
+  } else if (isTie()) {
+    header.innerText = "There's a tie! Play again";
+    return true;
   } else {
-    return false; //?? do we want to return anything?
+    return false;
   }
-}
+};
 
-var hasPlayerWon = function(player) {
-  //iterate through the table (somehow) and see if there are three in a row anywhere
-  //all three cells in a row are the same
-  //all three cells in a column are the same
-  //a diagonal top left to bottom right
-  //a diagonal top right to bottom left
-}
+var hasPlayerWon = function(player, cell) {
+  //assume match is true until checking cells
+  var rowMatches = true;
+  var colMatches = true;
+  //class names for diagonal cells
+  var diagonalLeftCells = ['RA C1', 'RB C2', 'RC C3']
+  var diagonalRightCells = ['RC C1', 'RB C2', 'RA C3']
+  //assume not on diagonal until checking
+  var onDiagonalLeft = false;
+  var onDiagonalRight = false;
 
-//create a function that resets the board when button is clicked to create a new one
-var newGame = function () {
-  //call create a new board function
-  newBoard();
-}
 
+  var chosenCellText = cell.path[0].innerText
+  var cellRow = cell.path[0].className.slice(0, 2)
+  var cellColumn = cell.path[0].className.slice(-2)
+
+  //checking if cell is on diagonal
+  for (var l = 0; l < diagonalLeftCells.length; l++) {
+    if (diagonalLeftCells[l] === cell.path[0].className) {
+      onDiagonalLeft = true;
+      var diagonalMatches = true;
+    }
+  }
+  for (var r = 0; r < diagonalRightCells.length; r++) {
+    if (diagonalRightCells[r] === cell.path[0].className) {
+      onDiagonalRight = true;
+      var diagonalMatches = true;
+    }
+  }
+
+  //check if row is a match
+  var row = document.getElementsByClassName(cellRow)
+  for (var i = 0; i < 3; i++) {
+    if (row[i].innerText !== chosenCellText) {
+      rowMatches = false;
+      console.log('no row match')
+      break;
+    }
+  }
+
+  //check if column is a match
+  var column = document.getElementsByClassName(cellColumn)
+  for (var i = 0; i < 3; i++) {
+    if (column[i].innerText !== chosenCellText) {
+      colMatches = false;
+      console.log('no column match')
+      break;
+    }
+  }
+
+  //if on a diagonal, check for diagonals
+  if (onDiagonalLeft) {
+    for (var l = 0; l < diagonalLeftCells.length; l++) {
+      if (chosenCellText !== document.getElementsByClassName(diagonalLeftCells[l])[0].innerText) {
+        diagonalMatches = false;
+        console.log('no diagonal left match')
+        break;
+      }
+    }
+  }
+  if (onDiagonalRight) {
+    for (var r = 0; r < diagonalRightCells.length; r++) {
+      if (chosenCellText !== document.getElementsByClassName(diagonalRightCells[r])[0].innerText) {
+        diagonalMatches = false;
+        console.log('no diagonal right match')
+        break;
+      }
+    }
+  }
+  //if any matches, return true;
+  return rowMatches || colMatches || diagonalMatches
+};
+
+var isTie = function() {
+  //iterate through the table and see if there are any empty squares
+  var tie = true;
+  var cells = document.querySelectorAll("td");
+  cells.forEach(cell => {
+    if (cell.innerText === '|___|') {
+      tie = false;
+    }
+  });
+  return tie;
+};
 
 newGame();
