@@ -9,6 +9,7 @@ var changeTurn = function() {
     playerXTurn = !playerXTurn
     //append a message to the header that says who's turn it is
     var whoseTurn = document.getElementsByClassName("whoseTurn");
+    console.log(whoseTurn)
     if (playerXTurn) {
       whoseTurn.innerText = "It's your turn, player X!";
     } else {
@@ -19,9 +20,10 @@ var changeTurn = function() {
 //create a function that creates the board
 var newBoard = function () {
   //each cell needs to be clickable
-  console.log('adding click events')
   var cells = document.querySelectorAll("td");
+  cells.forEach(cell => cell.innerText = '|___|')
   cells.forEach(cell => cell.addEventListener("click", toggleSquare));
+  document.getElementById("newGame").addEventListener("click", newGame);
 }
 
 //create a function that is called when a square is clicked
@@ -33,11 +35,15 @@ var toggleSquare = function (cell) {
   console.log(cellid)
   // this should:
   //  a) place either an x or o in that square
-
+  if (playerXTurn) {
+    cell.path[0].innerText = '|_X_|'
+  } else {
+    cell.path[0].innerText = '|_O_|'
+  }
   //  b) change who's turn it is
-  //changeTurn();
+  changeTurn();
   //  c) check if game is over
-  //isGameOver();
+  isGameOver();
   //  d) refresh the board (and only the board) with the new state
 }
 
@@ -69,7 +75,6 @@ var hasPlayerWon = function(player) {
 //create a function that resets the board when button is clicked to create a new one
 var newGame = function () {
   //call create a new board function
-  console.log('loading new board')
   newBoard();
 }
 
