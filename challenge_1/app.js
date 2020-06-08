@@ -8,29 +8,36 @@ var playerXTurn = true;
 var changeTurn = function() {
     playerXTurn = !playerXTurn
     //append a message to the header that says who's turn it is
-    var header = document.getElementsByTagName("header");
+    var whoseTurn = document.getElementsByClassName("whoseTurn");
     if (playerXTurn) {
-      header.innerText = "It's your turn, player X!";
+      whoseTurn.innerText = "It's your turn, player X!";
     } else {
-      header.innerText = "It's your turn, player O!"
+      whoseTurn.innerText = "It's your turn, player O!"
     }
 }
 
 //create a function that creates the board
 var newBoard = function () {
   //each cell needs to be clickable
-  var table = document.getElementsByTagName("table");
-
+  console.log('adding click events')
+  var cells = document.querySelectorAll("td");
+  cells.forEach(cell => cell.addEventListener("click", toggleSquare));
 }
 
 //create a function that is called when a square is clicked
-var toggleSquare = function () {
+var toggleSquare = function (cell) {
+
+  console.log('clicked on cell')
+  //cell.innerText('Hello, world')
+  cellid = cell.path[0].id
+  console.log(cellid)
   // this should:
   //  a) place either an x or o in that square
+
   //  b) change who's turn it is
-  changeTurn();
+  //changeTurn();
   //  c) check if game is over
-  isGameOver();
+  //isGameOver();
   //  d) refresh the board (and only the board) with the new state
 }
 
@@ -62,7 +69,9 @@ var hasPlayerWon = function(player) {
 //create a function that resets the board when button is clicked to create a new one
 var newGame = function () {
   //call create a new board function
+  console.log('loading new board')
   newBoard();
 }
 
 
+newGame();
