@@ -8,6 +8,7 @@ var playerXTurn = true;
 var newGame = function () {
   //call create a new board function
   playerXTurn = true;
+  document.getElementsByTagName('header')[0].innerText = "Let's play some Tic Tac Toe!"
   document.getElementsByClassName("whoseTurn")[0].innerText = "Player X goes first";
   //each cell needs to be clickable
   var cells = document.querySelectorAll("td");
@@ -34,7 +35,9 @@ var changeTurn = function() {
 
 //create a function that is called when a square is clicked
 var toggleSquare = function (cell) {
-  //cellid = cell.path[0].id
+  if (cell.path[0].innerText !== '|___|') {
+    return;
+  }
   //place either an x or o in that square
   if (playerXTurn) {
     cell.path[0].innerText = '|_X_|'
@@ -45,7 +48,7 @@ var toggleSquare = function (cell) {
   }
   //check if game is over
   if (gameIsOver(cell)) {
-    console.log('game is over')
+    console.log('game over!')
   } else {
     //if game not over, change who's turn it is
     changeTurn();
@@ -107,7 +110,6 @@ var hasPlayerWon = function(player, cell) {
   for (var i = 0; i < 3; i++) {
     if (row[i].innerText !== chosenCellText) {
       rowMatches = false;
-      console.log('no row match')
       break;
     }
   }
@@ -117,17 +119,15 @@ var hasPlayerWon = function(player, cell) {
   for (var i = 0; i < 3; i++) {
     if (column[i].innerText !== chosenCellText) {
       colMatches = false;
-      console.log('no column match')
       break;
     }
   }
 
-  //if on a diagonal, check for diagonals
+  //if on a diagonal, check for diagonal matches
   if (onDiagonalLeft) {
     for (var l = 0; l < diagonalLeftCells.length; l++) {
       if (chosenCellText !== document.getElementsByClassName(diagonalLeftCells[l])[0].innerText) {
         diagonalMatches = false;
-        console.log('no diagonal left match')
         break;
       }
     }
@@ -136,7 +136,6 @@ var hasPlayerWon = function(player, cell) {
     for (var r = 0; r < diagonalRightCells.length; r++) {
       if (chosenCellText !== document.getElementsByClassName(diagonalRightCells[r])[0].innerText) {
         diagonalMatches = false;
-        console.log('no diagonal right match')
         break;
       }
     }
