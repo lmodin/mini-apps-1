@@ -1,6 +1,8 @@
 body {
   width: 0 auto;
   font-family: sans-serif;
+  background-color: black;
+  color: white;
 }
 
 header {
@@ -24,11 +26,12 @@ button {
 }
 
 table {
+  color: black;
   background-color: lightblue;
   border: 5px solid black;
-  width: 400px;
-  height: 300px;
-  font-size: 30px;
+  width: 600px;
+  height: 500px;
+  font-size: 80px;
 }
 
 td {
@@ -38,6 +41,6 @@ td {
   border: 3px solid black;
 }
 
-.strikethrough {
+.highlight {
   background-color: lightgreen
 }

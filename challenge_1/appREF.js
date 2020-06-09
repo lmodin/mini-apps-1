@@ -11,6 +11,12 @@ var newGame = function () {
   document.getElementsByClassName("whoseTurn")[0].innerText = "Player X goes first";
   document.getElementById("newGame").addEventListener("click", newGame);
   //each cell needs to be clickable
+  var highlighted = document.getElementsByClassName('highlight');
+  if (highlighted.length > 0) {
+    for (var i = 0; i <= highlighted.length; i++) {
+      highlighted[i].classList.remove('highlight')
+    }
+  }
   var cells = document.querySelectorAll("td");
   cells.forEach(cell => cell.addEventListener("click", toggleSquare));
   cells.forEach(cell => cell.innerText = '');
@@ -61,7 +67,7 @@ var gameIsOver = function () {
   var player = playerXTurn ? 'X' : 'O';
   if (hasPlayerWon(player)) {
     header.innerText = `Player ${player} has won!`;
-    whoseTurn[0].innerText = "";
+    whoseTurn[0].innerText = `Congratulations, player ${player}!`;
     return true;
   } else if (isTie()) {
     header.innerText = "There's a tie! Play again";
@@ -92,7 +98,7 @@ var hasPlayerWon = function(player) {
       //add strikethrough
       var winningCells = document.getElementsByClassName(winningStreaks[i][3]);
       for (var j = 0; j < winningCells.length; j++) {
-        winningCells[j].classList.add('strikethrough');
+        winningCells[j].classList.add('highlight');
       }
       //return true, game over
       return true;
