@@ -13,8 +13,6 @@ app.use(bodyParser.json())
 
 app.post('/', (req, res, next) => {
   //call a function to render the input text into a csv style format
-  console.log('I got a request')
-  //console.log('request: ', req.body.inputText)
   var responseText = formatter.reformat(req.body.inputText)
   res.status(200).send(responseText)
   res.end();

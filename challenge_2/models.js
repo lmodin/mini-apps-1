@@ -36,30 +36,58 @@ var reformat = function(text) {
   addData(object)
 
   //return text
-  return htmlTemplate(response.join('\n'));
+  return htmlTemplate(response.join(`<br>`));
 }
 
 //template for appending data to the dom
 var htmlTemplate = function (text) {
-  return (`<div><h3 class="csvformat">CSV Format</h3><p>${text}</p></div>`)
+  return (`<head>
+  <title>CSV Generator</title>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <form method="post" action="/">
+    <input type="submit" value="Submit">
+      <textarea text="" name="inputText" id="input"></textarea>
+    </input >
+  </form>
+  <div>
+    <h3 class="csvformat">CSV Format</h3>
+      <p>${text}</p>
+  </div>
+  <script src="app.js"></script>
+</body>`)
 }
+
+
+
+
 
 
 /*
 
 HTML format to send back:
 
-'<div>
-  <h3 class="csvformat">CSV Format</h3>
-  <p>
-    ${reponseText}
-  </p>
-</div>'
+`<head>
+  <title>CSV Generator</title>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <form method="post" action="/">
+    <input type="submit" value="Submit">
+      <textarea text="" name="inputText" id="input"></textarea>
+    </input >
+  </form>
+  <div>
+    <h3 class="csvformat">CSV Format</h3>
+      <p>${reponseText}</p>
+  </div>
+  <script src="app.js"></script>
+</body>`
 
 */
 
 
 
-// double check syntax
 exports.reformat = reformat;
 
